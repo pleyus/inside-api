@@ -38,7 +38,7 @@
 		ORDER BY idnumber DESC
 		LIMIT 5";
 
-		if($in == 'radio.host')
+		if($in == 'radio.announcer')
 			//	Busqueda de radio
 			$query = "SELECT
 				u.id, 

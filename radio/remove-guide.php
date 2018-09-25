@@ -5,7 +5,7 @@
 
 	//	Tablas utilizadas
 	$tab_guide = "radio_guide";
-	$tab_gh = "radio_guide_hosts";
+	$tab_gh = "radio_guide_announcers";
 
 	//	Sacamos la info
 	$id = service_match_param('id');

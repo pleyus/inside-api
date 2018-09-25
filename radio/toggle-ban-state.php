@@ -9,7 +9,7 @@
 	//	Tablas a utilizar
 	$tab_messages = "radio_messages";
 	
-	if( (USER_LEVEL == UserType::Admin && CanDo('radio') ) || ImHost()){
+	if( (USER_LEVEL == UserType::Admin && CanDo('radio') ) || ImAnnouncer()){
 		$q = 
 		"UPDATE $tab_messages SET status = IF(status = 1, 0, 1) WHERE listid = :listid";
 

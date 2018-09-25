@@ -48,7 +48,7 @@
 		];
 
 		//	Si se esta ocultando todo:
-		if( $data[ ghost ] > 0 && $data[ hide ] > 0 )
+		if( $data[ gannouncer ] > 0 && $data[ hide ] > 0 )
 		{
 			$q = "INSERT INTO info_feedback 
 			(uid, crypt, at, comment, hide, response, rid, rat, status) VALUES

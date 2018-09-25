@@ -195,8 +195,8 @@
 					g.id, g.name, g.img, g.days
 				FROM 
 					radio_guide g
-					LEFT JOIN radio_guide_hosts gh ON gh.gid = g.id
-					LEFT JOIN radio_hosts h ON gh.hid = h.id
+					LEFT JOIN radio_guide_announcers gh ON gh.gid = g.id
+					LEFT JOIN radio_announcers h ON gh.hid = h.id
 				WHERE 
 					h.uid = :uid 
 					AND g.status = " . ($onlyactives ? 1 : 0);
@@ -210,7 +210,7 @@
 		else 
 			return [];
 	}
-	function ImHost()
+	function ImAnnouncer()
 	{
 		global $info_user;
 		$id = $info_user[ id ];
@@ -246,22 +246,6 @@
 			$id = $id > 0 ? $id : $U[ id ];
 			
 			$USER->uid = $U['id'];
-
-		// /***************************************************
-		// *	Cargamos la imagen del usuario desde plataforma
-		// ****************************************************/
-		// 	$img = $OUTPUT->user_picture($USER, array('size'=>50));
-		// 	if( !empty($img) )
-		// 	{
-		// 		$img = substr( $img, strpos($img, "<img src=\"")+10 );
-		// 		$img = substr( $img, 0, strpos($img, "\" alt=\"") );
-		// 		$img = str_replace( 'http://unitam.edu.mx/inside/service/', 
-		// 				'http://unitam.edu.mx/plataforma/', $img );
-		// 	}
-
-		// 	// Asignamos la imagen, si es que la hay
-		// 	$info_user['image'] = $img ?: '';
-		
 
 		/***************************************************
 		*	Sacamos la información del curso en el que esta
@@ -562,9 +546,6 @@
 			if( strpos($idnumber, $g) > -1 )
 				//	Lo asignamos al grupo mas grande encontrado
 				$group = $g;
-			// else
-			// 	//	Si no, terminamos
-			// 	break;
 			
 		}
 		//	Ya tenemos el grupo mas grande de numeros id seriales. Ej: ###

@@ -7,8 +7,8 @@
 	
 	$T_users = "info_user";
 	$T_guide = "radio_guide";
-	$T_hosts = "radio_hosts";
-	$T_gh = "radio_guide_hosts";
+	$T_announcers = "radio_announcers";
+	$T_gh = "radio_guide_announcers";
 	$T_pictures = "info_user_pictures";
 	$T_categories = "info_categories";
 	$T_institutions = 'info_institutions';

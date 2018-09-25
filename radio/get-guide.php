@@ -5,8 +5,8 @@
 
 	//	Tablas utilizadas
 	$tab_guide = "radio_guide";
-	$tab_ghosts = "radio_guide_hosts";
-	$tab_hosts = "radio_hosts";
+	$tab_gannouncers = "radio_guide_announcers";
+	$tab_announcers = "radio_announcers";
 	$tab_users = "info_user";
 	$tab_course = "info_categories";
 
@@ -29,7 +29,7 @@
 				$prog = $r[0];
 				$prog['days'] = unserialize($prog['days']);
 
-				//	Ahora sacamos los hosts
+				//	Ahora sacamos los announcers
 				$q = 
 					"SELECT
 						h.*,
@@ -38,15 +38,15 @@
 						c.name course,
 						u.level
 					FROM 
-						$tab_ghosts gh
-						LEFT JOIN $tab_hosts h ON h.id = gh.hid
+						$tab_gannouncers gh
+						LEFT JOIN $tab_announcers h ON h.id = gh.hid
 						LEFT JOIN $tab_users u ON u.id = h.uid
 						LEFT JOIN $tab_course c ON c.id = u.cid
 					WHERE 
 						gid = :gid";
 				$p = ['gid' => $id];
 				$r = service_db_select($q, $p);
-				$prog['hosts'] = !empty($r) ? $r : [];
+				$prog['announcers'] = !empty($r) ? $r : [];
 				
 				//$prog = get_prepared_query($q, $p);
 				service_end(Status::Success, $prog);

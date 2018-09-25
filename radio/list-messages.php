@@ -14,7 +14,7 @@
 	//	Tablas a utilizar
 	$tab_messages = "radio_messages";
 	
-	if( ( USER_LEVEL == UserType::Admin && CanDo('radio') ) || ImHost()){
+	if( ( USER_LEVEL == UserType::Admin && CanDo('radio') ) || ImAnnouncer()){
 		//	Si se solicitan los recientes...
 		if($at > 0)
 		{

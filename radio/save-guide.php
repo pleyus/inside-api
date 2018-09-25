@@ -5,7 +5,7 @@
 
 	//	Tablas utilizadas
 	$tab_guide = "radio_guide";
-	$tab_gh = "radio_guide_hosts";
+	$tab_gh = "radio_guide_announcers";
 
 	//	Sacamos la info
 	$G = json_decode( service_match_param('data'), true );
@@ -33,11 +33,11 @@
 				$r = service_db_insert($q, $p);
 
 				//	Insertamos los locutores, si es que trae...
-				if( !empty($G[ hosts ]) ){
+				if( !empty($G[ announcers ]) ){
 					$q = "";
 					$p = [ ];
 					$id = $G[id];
-					foreach( $G[ hosts ] as $h )
+					foreach( $G[ announcers ] as $h )
 					{
 						$q .= " ($id, :hid_" . $h[ id ] . "),";
 						$p[ 'hid_'.$h[ id ] ] = $h[ id ];
@@ -71,11 +71,11 @@
 				$id = $r[0][id];
 
 				//	Insertamos los locutores
-				if( !empty( $G[ hosts ]) ){
-					$hq = ""; // Host Queries
+				if( !empty( $G[ announcers ]) ){
+					$hq = ""; // Announcer Queries
 					$p = [ ID => $id ];
 
-					foreach( $G[ hosts ] as $h )
+					foreach( $G[ announcers ] as $h )
 					{
 						$hq .= "( :ID, :hid_" . $h[ id ] . "),";
 						$p[ 'hid_'.$h[ id ] ] = $h[ id ];

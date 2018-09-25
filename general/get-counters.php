@@ -49,7 +49,7 @@
 	}
 
 	//	Mensajes de radio
-	if( CanDo('radio') || ImHost() )
+	if( CanDo('radio') || ImAnnouncer() )
 	{
 		$lmt = service_match_param('lmt') | service_match_param('radio-lmt'); # Last Message Time
 		$q = "SELECT id FROM radio_messages WHERE at > :lmt";

@@ -14,7 +14,7 @@
 		try 
 		{ 
 			$service_db = new PDO(
-				"mysql:hostname=" . $CFG->dbhost . 
+				"mysql:announcername=" . $CFG->dbannouncer . 
 				";dbname=" . $CFG->dbname . 
 				";charset=utf8", $CFG->dbuser,
 				$CFG->dbpass ); 

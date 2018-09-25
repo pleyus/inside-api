@@ -10,19 +10,19 @@
 	
 	//	Tablas a utilizar
 	$tab_guide = "radio_guide";
-	$tab_gh = "radio_guide_hosts";
-	$tab_h = "radio_hosts";
+	$tab_gh = "radio_guide_announcers";
+	$tab_h = "radio_announcers";
 
 	$q = 
 	"SELECT 
 		g.*,
-		hs.hosts
+		hs.announcers
 	FROM 
 		$tab_guide g
 		LEFT JOIN (
 			SELECT 
 				gh.gid, 
-				GROUP_CONCAT(h.alias ORDER BY h.alias ASC SEPARATOR ';') hosts
+				GROUP_CONCAT(h.alias ORDER BY h.alias ASC SEPARATOR ';') announcers
 
 			FROM 
 				$tab_gh gh 
@@ -39,7 +39,7 @@
 
 	//	Lo pesado...
 	for($i = 0; $i < count($G); $i++){
-		$G[$i]['hosts'] = array_filter( explode(";", $G[$i]['hosts']) );
+		$G[$i]['announcers'] = array_filter( explode(";", $G[$i]['announcers']) );
 		$G[$i]['days'] = unserialize($G[$i]['days']);
 	}
 	service_end(Status::Success, $G);

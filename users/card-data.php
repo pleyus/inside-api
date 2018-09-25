@@ -5,7 +5,7 @@
 
 	$action = service_match_param('action');
 	$ids = GetIdsFromString( service_match_param('ids') );
-		
+	$ids = '(' . implode(',', $ids) . ')';
 
 	if( USER_LEVEL == UserType::Admin && CanDo('user') )
 	{
@@ -23,10 +23,9 @@
 			LEFT JOIN info_categories c ON c.id = u.cid
 			LEFT JOIN info_user_pictures p ON p.id = u.pid
 		WHERE
-			u.idnumber like '18%' 
-			AND u.level = 1 
-			AND u.status = 0 
-			AND u.pid > 0";
+			u.id IN $ids
+		LIMIT 9999";
+
 		$r = service_db_select($q);
 
 		//	Si nos devuelve usuarios
@@ -72,8 +71,10 @@
 
 			$zip->addFromString("info.csv", $csv);
 			$zip->close();
-			service_end(Status::Success, 'http://unitam.edu.mx/tmp/' . $filename);
+			service_end(Status::Success, '/tmp/' . $filename);
 		}
 		service_end(Status::Warning, 'No se encontraron usuarios disponibles para operar.');
 	}
+
 	service_end(Status::Error, 'No tienes permisos para usar este modulo');
+	
