@@ -7,6 +7,10 @@
 	
 	$filter = service_match_param('filter');
 
+	//	Sacamos los Ids solicitados (en caso de que vengan)
+	$ids = GetIdsFromString( service_match_param('ids') );
+	$ids = '(' . implode(',', $ids) . ')';
+
 	//	Sacamos los comodines
 	$Wild = Wildcards( 
 		service_match_param('s'), 
@@ -71,7 +75,6 @@
 		
 		
 	}
-	// die( print_r([$Wild, $WQuery, $WParams], true));
 	
 	//	Search
 	$s = $Wild[0];
@@ -125,24 +128,31 @@
 			LEFT JOIN info_user_pictures p ON p.id = u.pid
 			LEFT JOIN info_sepomex s ON s.id = u.lid
 		WHERE 1 " . 
-			
-			(
-				//	Ponemos los Wildcards por sobre los tipos de usuario (que creo que ya no se usan)
-				!empty($WQuery)
-				? $WQuery 
-				: ( $filter > -1 ? " AND u.type = :filter " : '' )
-			) .
-			
-			( 
-				!empty( $s ) 
-					? " AND CONCAT_WS(' ', 
-						u.firstname, u.lastname, u.firstname,
-						u.idnumber, c.name, u.level,
-						u.email, u.personal_phone, u.tutor_phone) like :s"
-					: '' 
-			) .
-		" ORDER BY " . $the_order .
-		" LIMIT :last, 10";
+
+			(	//	En caso de que se nos pidan los Ids especificamente ponemos por sobre todo.
+				//	Si no esta vacio:
+				!empty($ids)
+
+				//	Cargamos los ids, ponemos el orden que viene y el limit
+				? $ids . " ORDER BY " . $the_order . " LIMIT 9999"
+
+				:(
+					//	Ponemos los Wildcards
+					( !empty($WQuery) ? $WQuery : '' ) .
+					
+					//	Agregamos la busqueda
+					( 
+						!empty( $s ) 
+							? " AND CONCAT_WS(' ', 
+								u.firstname, u.lastname, u.firstname,
+								u.idnumber, c.name, u.level,
+								u.email, u.personal_phone, u.tutor_phone) like :s"
+							: '' 
+					) .
+					" ORDER BY " . $the_order .
+					" LIMIT :last, 10"
+				)
+		);
 
 		$params = array_merge(['last' => $last ], $WParams);
 		

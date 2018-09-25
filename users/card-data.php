@@ -4,6 +4,7 @@
 	if ( !defined('MAKE') ) die();
 
 	$action = service_match_param('action');
+	
 	$ids = GetIdsFromString( service_match_param('ids') );
 	$ids = '(' . implode(',', $ids) . ')';
 
@@ -77,4 +78,3 @@
 	}
 
 	service_end(Status::Error, 'No tienes permisos para usar este modulo');
-	
