@@ -11,6 +11,10 @@
 	$s = service_match_param('s');
 	$s = str_replace(' ', '%', $s);
 
+	$excludeIds = GetIdsFromString( service_match_param('exclude') );
+	if(!empty($excludeIds))
+		$excludeIds = ' AND u.id NOT IN (' . implode(',', $excludeIds) . ') ';
+
 	//	Para buscar usuarios en distintas tablas (relaciones)
 	$in = service_match_param('in');
 
@@ -49,10 +53,10 @@
 				c.name course,
 				u.level,
 				
-				CONCAT_WS(' ', u.firstname, u.lastname) link_title,
-				IF(c.name IS NULL, IF(u.type = 4,'Administrador', IF(u.type = 3, 'Docente', '(Desconocido)')) , c.name) link_subtitle,
-				u.email link_body,
-				p.filename link_imgulr
+				u.firstname link_title,
+				u.lastname link_subtitle,
+				IF(c.name IS NULL, IF(u.type = 4,'Administrador', IF(u.type = 3, 'Docente', '(Desconocido)')) , c.name) link_body,
+				p.filename link_imgurl
 				
 			FROM
 				$Tusers u
@@ -60,7 +64,9 @@
 				LEFT JOIN $Tcourse c ON c.id = u.cid
 			WHERE
 				CONCAT_WS(' ', u.firstname, u.lastname, u.idnumber, u.email) like :s
-			ORDER BY 
+					AND u.status = 0 ".
+					(!empty($excludeIds) ? $excludeIds : '').	//	En caso de excluir ids...
+				" ORDER BY 
 				u.firstname DESC
 			LIMIT 5";
 		$params = ['s' => '%' . $s . '%'];
