@@ -9,7 +9,8 @@
 
 	//	Sacamos los Ids solicitados (en caso de que vengan)
 	$ids = GetIdsFromString( service_match_param('ids') );
-	$ids = '(' . implode(',', $ids) . ')';
+	if(!empty($ids))
+		$ids = '(' . implode(',', $ids) . ')';
 
 	//	Sacamos los comodines
 	$Wild = Wildcards( 
@@ -127,42 +128,38 @@
 			LEFT JOIN info_categories c ON c.id = u.cid
 			LEFT JOIN info_user_pictures p ON p.id = u.pid
 			LEFT JOIN info_sepomex s ON s.id = u.lid
-		WHERE 1 " . 
-
-			(	//	En caso de que se nos pidan los Ids especificamente ponemos por sobre todo.
-				//	Si no esta vacio:
-				!empty($ids)
-
-				//	Cargamos los ids, ponemos el orden que viene y el limit
-				? $ids . " ORDER BY " . $the_order . " LIMIT 9999"
-
-				:(
-					//	Ponemos los Wildcards
-					( !empty($WQuery) ? $WQuery : '' ) .
-					
-					//	Agregamos la busqueda
-					( 
-						!empty( $s ) 
-							? " AND CONCAT_WS(' ', 
-								u.firstname, u.lastname, u.firstname,
-								u.idnumber, c.name, u.level,
-								u.email, u.personal_phone, u.tutor_phone) like :s"
-							: '' 
-					) .
-					" ORDER BY " . $the_order .
-					" LIMIT :last, 10"
-				)
-		);
-
-		$params = array_merge(['last' => $last ], $WParams);
+		WHERE 1 ";
 		
-		if( !empty($s) )
-			$params['s'] = '%' . $s . '%';
+		$params = [];
+		if(!empty($ids))
+			$query .= ' AND u.id IN ' . $ids . " ORDER BY " . $the_order . " LIMIT 9999";
+		else {
+			$query .=
+				//	Ponemos los Wildcards
+				( !empty($WQuery) ? $WQuery : '' ) .
+						
+				//	Agregamos la busqueda
+				( 
+					!empty( $s ) 
+						? " AND CONCAT_WS(' ', 
+							u.firstname, u.lastname, u.firstname,
+							u.idnumber, c.name, u.level,
+							u.email, u.personal_phone, u.tutor_phone) like :s"
+						: '' 
+				) .
+				" ORDER BY " . $the_order .
+				" LIMIT :last, 10";
 
-		//	Se agregan los filtros, solo si es mayor a -1 y si estan vacios los comodines
-		if( $filter > -1 && empty($WParams))
-			$params['filter'] = $filter;
-		
+			$params = array_merge(['last' => $last ], $WParams);
+			
+			if( !empty($s) )
+				$params['s'] = '%' . $s . '%';
+
+			//	Se agregan los filtros, solo si es mayor a -1 y si estan vacios los comodines
+			if( $filter > -1 && empty($WParams))
+				$params['filter'] = $filter;
+		}
+
 		$data = service_db_select( $query, $params );
 
 		#service_end(Status::Success, [$data, get_prepared_query($query, $params), $query, $params, $_service_db_select_error]);

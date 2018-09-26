@@ -595,13 +595,14 @@
 	 * @return array
 	 */
 	function GetIdsFromString( $string, $separator = ',' ) {
-		$tmpids = explode( $separator, $ids );
+		$tmpids = explode( $separator, $string );
 		$ids = [];
 
 		foreach( $tmpids as $id ) {
 			$i = trim( $id );
 
 			if($i > 0)
-				$ids[] = $id;
+				$ids[] = $i * 1;
 		}
+		return $ids;
 	}
