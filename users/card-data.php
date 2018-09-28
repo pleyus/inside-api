@@ -6,6 +6,10 @@
 	$action = service_match_param('action');
 	
 	$ids = GetIdsFromString( service_match_param('ids') );
+	
+	if( empty($ids) )
+		service_end( Status::Error, 'No hay usuarios seleccionados para descargar.' );
+
 	$ids = '(' . implode(',', $ids) . ')';
 
 	if( USER_LEVEL == UserType::Admin && CanDo('user') )
@@ -74,7 +78,7 @@
 			$zip->close();
 			service_end(Status::Success, '/tmp/' . $filename);
 		}
-		service_end(Status::Warning, 'No se encontraron usuarios disponibles para operar.');
+		service_end(Status::Warning, 'No se encontraron usuarios disponibles para descargar.');
 	}
 
 	service_end(Status::Error, 'No tienes permisos para usar este modulo');
