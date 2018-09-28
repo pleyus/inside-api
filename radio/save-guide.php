@@ -17,9 +17,10 @@
 		if($G[id] > 0)
 		{
 			//	Actualizamos los datos del programa
-			$q = "UPDATE $tab_guide SET name = :name, days = :days, status = :status WHERE id = :id;";
+			$q = "UPDATE $tab_guide SET name = :name, summary = :summary, days = :days, status = :status WHERE id = :id;";
 			$p = [
 				name => $G[name],
+				summary => $G[summary],
 				days => serialize($G[days]),
 				status => $G[status] == 1 ? 1 : 0,
 				id => $G[id]
@@ -51,12 +52,12 @@
 				service_end(Status::Success, 'Se ha guardado la información...');
 			}
 			service_end(Status::Error, 'No se pudo actualizar la información del programa');
-		}
-		else{
+		} else {
 			//	Creamos un nuevo programa
-			$q = "INSERT INTO $tab_guide (name, img, days, status) VALUES (:name, '', :days, :status)";
+			$q = "INSERT INTO $tab_guide (name, summary, img, days, status) VALUES (:name, '', :days, :status)";
 			$p = [
 				name => $G[name],
+				summary => $G[summary],
 				days => serialize($G[days]),
 				status => $G[status] == 1 ? 1 : 0
 			];
