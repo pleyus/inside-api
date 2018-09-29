@@ -11,10 +11,6 @@
 	$s = service_match_param('s');
 	$s = str_replace(' ', '%', $s);
 
-	$excludeIds = GetIdsFromString( service_match_param('exclude') );
-	if(!empty($excludeIds))
-		$excludeIds = ' AND u.id NOT IN (' . implode(',', $excludeIds) . ') ';
-
 	//	Para buscar usuarios en distintas tablas (relaciones)
 	$in = service_match_param('in');
 
@@ -42,7 +38,22 @@
 		ORDER BY idnumber DESC
 		LIMIT 5";
 
-		if($in == 'radio.announcer')
+		if($in == 'radio.announcer') {
+
+			//	Sacamos los ids que ya estan registrados...
+			$q = "SELECT uid FROM radio_announcers GROUP BY uid";
+			$r = service_db_select($q);
+
+			$exclude = [];
+
+			//	Si no viene vacio...
+			if(!empty($r)) {
+
+				//	Recorremos todo para sacarlos a un array
+				for($i = 0; $i < count($r); $i++)
+					$exclude[] = $r[$i]['uid']*1;		
+			}
+
 			//	Busqueda de radio
 			$query = "SELECT
 				u.id, 
@@ -65,10 +76,11 @@
 			WHERE
 				CONCAT_WS(' ', u.firstname, u.lastname, u.idnumber, u.email) like :s
 					AND u.status = 0 ".
-					(!empty($excludeIds) ? $excludeIds : '').	//	En caso de excluir ids...
+					( !empty($exclude) ? ' AND u.id NOT IN (' . implode(',', $exclude) . ') ' : '').
 				" ORDER BY 
 				u.firstname DESC
 			LIMIT 5";
+		}
 		$params = ['s' => '%' . $s . '%'];
 
 		$data = service_db_select($query,  $params);

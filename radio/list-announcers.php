@@ -4,7 +4,7 @@
 	if ( !defined('MAKE') ) die();
 
 	//	Sacamos los parametros
-	$s = service_match_param('s'); //	Busqueda
+	$s = str_replace(' ', '%', service_match_param('s')); //	Busqueda
 	$last = service_match_param('last');
 	$last = $last > -1 ? $last : 0;
 	
@@ -36,7 +36,7 @@
 			u.id AS uid,
 
 			h.alias link_title,
-			CONCAT_WS(' ', u.firstname, u.lastname) link_subtitle,
+			CONCAT_WS(' ', u.firstname, u.lastname, c.name, h.alias) link_subtitle,
 			IF(c.name IS NULL, IF(u.type = 4,'Administrador', IF(u.type = 3, 'Docente', '(Desconocido)')) , c.name) link_body,
 			p.filename link_imgurl
 		FROM 
@@ -50,7 +50,7 @@
 		"ORDER BY 
 			h.alias DESC
 		LIMIT 
-			:last, 5";
+			:last, 6";
 		
 		$p = [ 'last' => $last ];
 		if(!empty($s))
