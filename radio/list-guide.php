@@ -9,9 +9,10 @@
 	$last = $last > -1 ? $last : 0;
 	
 	$p = [
-		's' => '%' . str_replace(' ', '%', $s) . '%',
 		'last' => $last
 	];
+	if(!empty($s))
+		$p['s'] = '%' . str_replace(' ', '%', $s) . '%';
 
 	//	Tablas a utilizar
 	$tab_guide = "radio_guide";
