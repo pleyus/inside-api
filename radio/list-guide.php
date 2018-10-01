@@ -8,6 +8,11 @@
 	$last = service_match_param('last');
 	$last = $last > -1 ? $last : 0;
 	
+	$p = [
+		's' => '%' . str_replace(' ', '%', $s) . '%',
+		'last' => $last
+	];
+
 	//	Tablas a utilizar
 	$tab_guide = "radio_guide";
 	$tab_gh = "radio_guide_announcers";
@@ -30,9 +35,11 @@
 			GROUP BY 
 				gh.gid
 		) hs ON gid = g.id
-	LIMIT 99999";
+	WHERE 1 ". 
+		(!empty($s) ? ' AND CONCAT(g.name, g.summary, hs.announcers) LIKE :s ' : '') .
+	" LIMIT :last, 10";
 	
-	$G = service_db_select($q);
+	$G = service_db_select($q, $p);
 
 	//$G = get_prepared_query($q, $p);
 	//service_end(Status::Success, $G);
