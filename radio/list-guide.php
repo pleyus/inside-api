@@ -37,13 +37,13 @@
 				gh.gid
 		) hs ON gid = g.id
 	WHERE 1 ". 
-		(!empty($s) ? ' AND CONCAT(g.name, g.summary, hs.announcers) LIKE :s ' : '') .
-	" LIMIT :last, 10";
+		(!empty($s) ? ' AND CONCAT(g.name, g.summary, hs.announcers, g.name, g.summary, hs.announcers) LIKE :s ' : '') .
+	" LIMIT :last, 6";
 	
 	$G = service_db_select($q, $p);
 
-	//$G = get_prepared_query($q, $p);
-	//service_end(Status::Success, $G);
+	// $G = get_prepared_query($q, $p);
+	// service_end(Status::Success, $G);
 
 	//	Lo pesado...
 	for($i = 0; $i < count($G); $i++){
