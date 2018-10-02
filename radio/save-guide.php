@@ -54,7 +54,7 @@
 			service_end(Status::Error, 'No se pudo actualizar la información del programa');
 		} else {
 			//	Creamos un nuevo programa
-			$q = "INSERT INTO $tab_guide (name, summary, img, days, status) VALUES (:name, '', :days, :status)";
+			$q = "INSERT INTO $tab_guide (name, summary, img, days, status) VALUES (:name, :summary, '', :days, :status)";
 			$p = [
 				name => $G[name],
 				summary => $G[summary],
@@ -63,9 +63,9 @@
 			];
 			
 			service_db_insert($q, $p);
-
+			
 			$q = "SELECT MAX(id) AS id FROM $tab_guide";
-			//die(get_prepared_query($q,$p));
+			
 			$r = service_db_select($q);
 
 			if( !empty($r) ){
@@ -74,11 +74,11 @@
 				//	Insertamos los locutores
 				if( !empty( $G[ announcers ]) ){
 					$hq = ""; // Announcer Queries
-					$p = [ ID => $id ];
+					$p = [];
 
 					foreach( $G[ announcers ] as $h )
 					{
-						$hq .= "( :ID, :hid_" . $h[ id ] . "),";
+						$hq .= "( $id, :hid_" . $h[ id ] . "),";
 						$p[ 'hid_'.$h[ id ] ] = $h[ id ];
 					}
 					$q = "INSERT INTO $tab_gh (gid, hid) VALUES " . substr($hq, 0, -1);
