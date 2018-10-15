@@ -16,6 +16,7 @@
 	{
 		$q = 
 		"SELECT 
+			u.id,
 			u.firstname,
 			u.lastname,
 			IF(c.name IS NULL, IF(u.type = 4,'Administrativo', IF(u.type = 3, 'Docente', 'Usuario Web')) , 'Alumno') as type, 
@@ -53,9 +54,10 @@
 
 
 			$csv = "idnumber;code;firstname;lastname;type;course;pics;e;s" . PHP_EOL;
-
+			$errors = "";
 			foreach( $r as $val )
 			{
+				if(is_file($root . '/uploads/users/' . $val['filename'])) {
 				$course = $val['course'];
 				$course = strpos($course, '(') > -1
 					? substr($course,0, strpos($course, '('))
@@ -72,10 +74,17 @@
 					(strpos($val['course'], '(') > -1 ? 'true' : 'false' ) . ';' . 
 					PHP_EOL;
 				$zip->addFile($root . '/uploads/users/' . $val['filename'], 'pics/' . $val['filename']);
+				}
+				else
+					$errors .= " – No hay imagen para " . $val['firstname'] . ' ' . $val['lastname'] . ' (id:' . $val['id'] . ')' . PHP_EOL;
 			}
 
 			$zip->addFromString("info.csv", $csv);
-			$zip->close();
+
+			if($errors != '')
+				$zip->addFromString("errors.txt", 'Hubieron algunos problemas al crear los archivos:' . PHP_EOL . $errors);
+			
+				$zip->close();
 			service_end(Status::Success, '/tmp/' . $filename);
 		}
 		service_end(Status::Warning, 'No se encontraron usuarios disponibles para descargar.');
