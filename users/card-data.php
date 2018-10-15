@@ -21,6 +21,8 @@
 			u.lastname,
 			IF(c.name IS NULL, IF(u.type = 4,'Administrativo', IF(u.type = 3, 'Docente', 'Usuario Web')) , 'Alumno') as type, 
 			IF(c.name IS NULL, '', c.name) course,
+			IF(c.param1 = 'e', 'true', 'false') e,
+			IF(c.param1 = 's', 'true', 'false') s,
 			u.level,
 			u.idnumber,
 			p.filename
@@ -53,27 +55,27 @@
 				service_end(Status::Error, "No se puede crear el archivo comprimido");
 
 
-			$csv = "idnumber;code;firstname;lastname;type;course;pics;e;s" . PHP_EOL;
+			$csv = "idnumber	code	firstname	lastname	type	course	pics	e	s" . PHP_EOL;
 			$errors = "";
 			foreach( $r as $val )
 			{
 				if(is_file($root . '/uploads/users/' . $val['filename'])) {
-				$course = $val['course'];
-				$course = strpos($course, '(') > -1
-					? substr($course,0, strpos($course, '('))
-					: $course;
-				$csv .= 
-					$val['idnumber'] . ';' . 
-					'*' . $val['idnumber'] . '*;' . 
-					$val['firstname'] . ';' . 
-					$val['lastname'] . ';' . 
-					$val['type'] . ';' . 
-					$course . ';' . 
-					'pics/' . $val['filename'] . ';' . 
-					(strpos($val['course'], '(') > -1 ? 'false' : 'true' ) . ';' . 
-					(strpos($val['course'], '(') > -1 ? 'true' : 'false' ) . ';' . 
-					PHP_EOL;
-				$zip->addFile($root . '/uploads/users/' . $val['filename'], 'pics/' . $val['filename']);
+					$course = $val['course'];
+					$course = strpos($course, '(') > -1
+						? substr($course,0, strpos($course, '('))
+						: $course;
+					$csv .= 
+						$val['idnumber'] . '	' . 
+						'*' . $val['idnumber'] . '*	' . 
+						$val['firstname'] . '	' . 
+						$val['lastname'] . '	' . 
+						$val['type'] . '	' . 
+						$course . '	' . 
+						'pics/' . $val['filename'] . '	' . 
+						($val['e'] == $val['s'] ? 'true' : $val['e']) . '	' . 
+						$val['s'] .
+						PHP_EOL;
+					$zip->addFile($root . '/uploads/users/' . $val['filename'], 'pics/' . $val['filename']);
 				}
 				else
 					$errors .= " – No hay imagen para " . $val['firstname'] . ' ' . $val['lastname'] . ' (id:' . $val['id'] . ')' . PHP_EOL;
