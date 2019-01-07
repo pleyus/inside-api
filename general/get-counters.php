@@ -79,6 +79,7 @@
 				LEFT JOIN info_user_pictures p ON p.id = u.pid
 				LEFT JOIN info_categories c ON c.id = u.cid
 			WHERE 
+				u.birthday != 0 AND
 				DATE_ADD(
 					FROM_UNIXTIME(u.birthday), 
 					INTERVAL YEAR( CURDATE() ) - YEAR( FROM_UNIXTIME(u.birthday) )  + 
