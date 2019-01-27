@@ -14,12 +14,12 @@
 		//	Si el alias viene vacio,
 		if (empty ($H[alias]) ) {
 			$q = "SELECT firstname FROM info_user WHERE id = :uid";
-			$p = [ uid => $H[alias]];
+			$p = [ uid => $H[uid]];
 			$r = service_db_select($q, $p);
 			if(!empty( $r ))
 				$H[alias] = $r[0]['firstname'];
 		}
-		
+
 		//	Creamos un nuevo programa
 		$q = "INSERT INTO $TAnnouncer (uid, alias, status) VALUES (:uid, :alias, 0)";
 		$p = [
