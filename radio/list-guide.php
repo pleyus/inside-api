@@ -9,11 +9,10 @@
 	$last = $last > -1 ? $last : 0;
 
 	$down = service_get_param('down');
-	
 	$p = [];
 	if($down != 1)
 		$p['last'] = $last;
-		
+
 	if(!empty($s))
 		$p['s'] = '%' . str_replace(' ', '%', $s) . '%';
 
@@ -41,7 +40,7 @@
 		) hs ON gid = g.id
 	WHERE 1 ". 
 		(!empty($s) ? ' AND CONCAT(g.name, g.summary, hs.announcers, g.name, g.summary, hs.announcers) LIKE :s ' : '') .
-		($down == 1 ? ' LIMIT 9999' : ' LIMIT :last, 6; ' );
+		($down == 1 ? ' LIMIT 9999 ' : ' LIMIT :last, 6; ' );
 	
 	$G = service_db_select($q, $p);
 
