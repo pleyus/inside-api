@@ -1,10 +1,15 @@
 <?php
+
+	//service_end(Status::Success, []);
 	//	Terminamos para que no se abra sin login...
 	if ( !defined('MAKE') ) die();
 
-	$last = service_get_param('last', Param::Post);
-	$filter_status = @$_POST['filter_status'];
+	$last = service_get_param('last', Param::Post, 0);
+	$filter_status = service_get_param('filter_status', Param::Post, -1);
 	
+	$id = service_get_param('id', Param::Post, 0);
+	// die("[" . $last . ", " . $id . "]");
+
 	$search = service_get_param('search', Param::Post);
 	$search = str_replace(' ', '%', $search);
 
@@ -29,23 +34,17 @@
 		if( !empty($search) )
 			$params['like'] = '%' . $search . '%';
 		
-		if( !( $filter_status < 0 ) )
+		if( $filter_status > -1 ) 
 			$params['filter_status'] = $filter_status;
 
 		//	Preparamos la consulta
 		$query = "SELECT 
 				p.*,
 				p.amount import,
-				-- p.id id,
-				-- p.uid uid,
-				-- p.at at,
 				CONCAT(u.firstname, ' ', u.lastname) name,
 				u.firstname,
 				u.lastname,
-				-- p.concept concept,
-				-- p.ref ref,
 				(p.amount + p.charge) amount,
-				-- p.status,
 				FALSE AS checked,
 				IF(c.name IS NULL, IF(u.type = 4,'Administrador', IF(u.type = 3, 'Docente', '(Desconocido)')) , c.name) hcname
 			FROM 
@@ -54,7 +53,7 @@
 				LEFT JOIN info_categories c ON c.id = p.hcid
 
 			WHERE 1 AND " . 
-				(USER_LEVEL == UserType::Student ? ' p.uid = ' . $USER->uid . ' AND ' : '') . 
+				($id > 0 || USER_LEVEL == UserType::Student ? ' p.uid = ' . ($id > 0 ? $id : $USER->uid) . ' AND ' : '') . 
 				
 				( 
 					!empty($search) 
@@ -71,21 +70,21 @@
 				(
 					USER_LEVEL == UserType::Student
 					? " AND p.status = " . PayStatus::Paid
-					: ( !( $filter_status < 0 ) ? " AND p.status = :filter_status" : '')
+					: ( $filter_status > -1 ? " AND p.status = :filter_status" : '')
 				) .
 			" ORDER BY " . $the_order . " LIMIT :last, 10"; 
 
 		// Buscamos el pago
-		
 		$P = service_db_select
 		(
 			$query,
 			$params
 		);
+		// die(get_prepared_query($query, $params));
 		
 		
 		//	Fin :D
-		service_end(Status::Success, $P !== false ? $P : []);
+		service_end(Status::Success, is_array($P) ? $P : []);
 	}
 	else
 		service_end(Status::Error, 'Lo sentimos, pero no tienes acceso a este modulo, por favor contacta con algun administrador para resolver tu situación');
