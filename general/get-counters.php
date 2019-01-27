@@ -67,7 +67,7 @@
 	//	Cumpleaños... 1
 		#	if( ERES_HUMANO ) 
 			$q = "SELECT
-				u.id, u.firstname, u.lastname, u.birthday, p.filename, u.status
+				u.id, u.firstname, u.lastname, u.birthday, p.filename, u.status,
 				IF(c.name IS NULL, IF(u.type = 4,'Administrativo', IF(u.type = 3, 'Docente', '(Desconocido)')) , c.name) course, 
 				u.level,
 				YEAR(CURDATE()) - YEAR( FROM_UNIXTIME( u.birthday) ) AS age,
