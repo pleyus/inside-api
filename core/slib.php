@@ -5,7 +5,7 @@
 	#-----------------------------------------------
 
 		//	Cambiamos la dirección del root de moodle
-		$__NEW_ROOT = '/inside/service';
+		$__NEW_ROOT = '/api';
 	
 		//	Llamamos a config.php de moodle
 		require_once $_SERVER['DOCUMENT_ROOT'] . "/plataforma/config.php";
