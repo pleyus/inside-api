@@ -124,3 +124,11 @@
 		#Messages
 		const Messages = 30;
 	}
+
+	abstract class OptionType {
+		const String = 0;
+		const Number = 1;
+		const Bool = 2;
+		const Json = 3; //	As JSON.stringify
+	}
+	
