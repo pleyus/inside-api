@@ -8,6 +8,7 @@
 		if( !is_int( $status ) )
 			throw new Exception("El estado debe ser un numero entero", 1);
 		
+		header('Content-Type: application/json; charset=utf-8', true);
 		die ( json_encode( [ 'status' => $status, 'data' => $data ] ) );
 	}
 	function service_match_param($name, $default = false)
