@@ -4,12 +4,12 @@
 	header('Access-Control-Allow-Credentials: true');
     header('Access-Control-Allow-Headers: X-Requested-With');
 	header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
-	header('Content-Type: application/json; charset=utf-8');
 
 	//	Nucleo
 	require_once "core/enum.php";
 	require_once "core/functions.php";
 	require_once "core/slib.php";
+	require_once "core/options.php";
 	
 	define( 'USING', str_replace( '/', '', service_get_param('using') ) );
 	define( 'MAKE', str_replace( '/', '', service_get_param('make') ) );
