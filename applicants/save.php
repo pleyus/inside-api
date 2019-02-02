@@ -253,10 +253,11 @@
 				#	Si viene la información entonces...
 				if(!empty($u))
 				{
-					$u = $u[0];
+					//	Sacamos el id del usuario
+					$u = $u[0]['id'];
 					$q = "INSERT INTO inside_applicants (uid, via, campaign, excluded) VALUES (:uid, :via, -1, :excluded)";
 					$p = [
-						uid => $u[id],
+						uid => $u,
 						via => $data[via] ?: 0,
 						excluded => $data[excluded] > 0 ? $data[excluded] : 0
 					];
@@ -266,7 +267,7 @@
 					{
 						#	Sacamo
 						$q = "SELECT id FROM inside_applicants WHERE uid = :uid";
-						$p = [ uid => $u[id] ];
+						$p = [ uid => $u ];
 						$aid = service_db_select($q, $p);
 						$aid = !empty( $aid ) ? $aid[0]['id'] : 0;
 
@@ -290,17 +291,17 @@
 									'email' => $email,
 									'phone' => $phone,
 									'id' => $contactId,
-									'aid' => $u[id]
+									'aid' => $aid
 								];
 								InsideLog(Actions::Create, Module::Applicants, $aid, 'Desde mensaje de contacto');
 								service_db_insert($q, $p);
 							}
 						}
 						else
-							InsideLog(Actions::Create, Module::Applicants, $aid);
+							InsideLog(Actions::Create, Module::Applicants, ['aid' => $aid, 'uid' => $u]);
 
 						#	Fin...
-						service_end(Status::Success, $aid);
+						service_end(Status::Success, ['aid' => $aid, 'uid' => $u]);
 					}
 					else
 						service_db_insert("DELETE FROM info_user WHERE id = :id", [id => $u[id]]);
