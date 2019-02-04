@@ -37,8 +37,8 @@
             . "LIMIT :last, 10";
         
         // Agregamos los parametros
-        $p = ['last' => $last]
-        if(!empty($s)) $p['s' => $s];
+        $p = ['last' => $last];
+        if(!empty($s)) $p['s'] = $s;
 
         // Cargamos los resultados
         $r = service_db_select($q);
