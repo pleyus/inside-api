@@ -5,6 +5,22 @@
     $s = service_match_param('s');
     $last = service_match_param('last');
 
+    /**
+     * Indica si se van a obtener solo los id externos de los posts
+     * Esto tiene prioridad sobre calquier consulta y solo devuelve
+     * una lista de ids,
+     *  [
+     *      id => 0,
+     *      externid => '123123123123_123123123123'
+     *  ]
+     */
+    $external = service_match_param('external');
+    if($external) {
+        $q = "SELECT id, externid FROM inside_posts WHERE externid != '' OR externid IS NOT NULL LIMIT 9999";
+        service_end(Status::Success, service_db_select($q));
+    }
+
+    //  Si el usuario es administrador...
     if( USER_LEVEL >= UserType::Admin)
 	{
         $q = "SELECT 
