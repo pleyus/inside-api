@@ -17,13 +17,13 @@
             //  Cargamos la imagen como null
             $post['image'] = null;
             
-            //  Si tenemos un iid en el post
-            if($post['iid'] > 0)
+            //  Si tenemos un fid en el post
+            if($post['fid'] > 0)
             {
 
-                //  Seleccionamos la imagen de acuerdo al iid
-                $q = "SELECT * FROM inside_posts_images WHERE id = :iid";
-                $p = [ 'iid' => $post['iid'] ];
+                //  Seleccionamos la imagen de acuerdo al fid
+                $q = "SELECT * FROM inside_files WHERE id = :fid";
+                $p = [ 'fid' => $post['fid'] ];
                 $r = service_db_select($q, $p);
 
                 // Y lo asignamos a image
@@ -34,8 +34,8 @@
             $q = "SELECT i.* 
                 FROM 
                     inside_pi_list l
-                    LEFT JOIN inside_posts_images i ON i.id = l.iid
-                WHERE l.pid = :pid"
+                    LEFT JOIN inside_files i ON i.id = l.fid
+                WHERE l.pid = :pid";
             $p = ['pid' => $post['id']];
             $r = service_db_select($q, $p);
 

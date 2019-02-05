@@ -26,13 +26,13 @@
         $q = "SELECT 
                 p.*,
                 i.url image_url,
-                i.caption
+                i.filename
             FROM inside_post p
-            LEFT JOIN inside_post_images
+            LEFT JOIN inside_files i ON i.id = p.fid
             WHERE 1 "
 
             //  Si se está buscando algo
-            . ( !empty($s) ? "AND CONCAT(p.title, p.content, i.caption, i.description) LIKE :s " : '')
+            . ( !empty($s) ? "AND CONCAT(p.title, p.content, i.filename, i.description) LIKE :s " : '')
 
             . "LIMIT :last, 10";
         

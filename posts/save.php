@@ -23,15 +23,15 @@
                 type = :type,
                 status = :status,
                 uid = :uid,
-                iid = :iid
+                fid = :fid
                 WHERE id = :id";
             $p = [
                 'title' => $post['title'],
                 'content' => $post['content'],
-                'type' => $post['type'] > 0 ? $post['type'] ? 0,
+                'type' => $post['type'] > 0 ? $post['type'] : 0,
                 'status' => $post['status'],
                 'uid' => $info_user['id'],
-                'iid' => $post['iid']
+                'fid' => $post['fid']
             ];
 
             if(service_db_insert( $q, $p )) {
@@ -46,8 +46,8 @@
                     }
                 $inserts = substr($inserts, 0, -1);
                                 
-                service_db_insert("INSERT INTO inside_pi_list (pid, iid) VALUES " . $inserts);
-                service_end(Status::Success, $post['id'])
+                service_db_insert("INSERT INTO inside_pi_list (pid, fid) VALUES " . $inserts);
+                service_end(Status::Success, $post['id']);
             }
             else
                 serice_end(Status::Error, 'No se pudo guardar la publicación.<br> ERR: ' . service_db_error()[2]);
@@ -57,16 +57,16 @@
         else {            
             $at = time();
 
-            $q = "INSERT INTO inside_posts (title, content, type, at, status, uid, iid) 
-                VALUES(:title, :content, :type, :at, :status, :uid, :iid)";
+            $q = "INSERT INTO inside_posts (title, content, type, at, status, uid, fid) 
+                VALUES(:title, :content, :type, :at, :status, :uid, :fid)";
             $p = [
                 'title' => $post['title'],
                 'content' => $post['content'],
-                'type' => $post['type'] > 0 ? $post['type'] ? 0,
+                'type' => $post['type'] > 0 ? $post['type'] : 0,
                 'at' => $at,
                 'status' => $post['status'],
                 'uid' => $info_user['id'],
-                'iid' => $post['iid']
+                'fid' => $post['fid']
             ];
 
             if(service_db_insert( $q, $p )) {
