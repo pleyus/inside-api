@@ -1,79 +1,83 @@
 <?php
     function LoadOptions( $UserId = 0 ) {
 
-        //  Cargamos las variables globales necesarias
-        global $info_user;
+			//  Cargamos las variables globales necesarias
+			global $info_user;
 
-        //  Reiniciamos la configuración
-        $config = [];
+			//  Reiniciamos la configuración
+			$config = [];
 
-        //  Consultamos la configuración general
-        $options = service_db_select('SELECT * FROM inside_options');
+			//  Consultamos la configuración general
+			$options = service_db_select('SELECT * FROM inside_options');
 
-        //  Por cada resultado...
-        for ($i = 0; $i < count($options); $i++) {
+			//  Por cada resultado...
+			for ($i = 0; $i < count($options); $i++) {
 
-            //  Sacamos un shortcut para los parametros
-            $name = $options[$i]['name'];
-            $id = $options[$i]['id'];
-            $val = $options[$i]['value'];
-            $type = $options[$i][ 'type' ];
-            $restricted = $options[$i][ 'restricted' ] != 0;
+					//  Sacamos un shortcut para los parametros
+					$name = $options[$i]['name'];
+					$id = $options[$i]['id'];
+					$val = $options[$i]['value'];
+					$type = $options[$i][ 'type' ];
+					$restricted = $options[$i][ 'restricted' ] != 0;
 
-            //  Verificamos el tipo de valor que trae
-            if (OptionType::Number == $type)
-                $val = $val * 1;
+					//  Verificamos el tipo de valor que trae
+					if (OptionType::Number == $type)
+							$val = $val * 1;
 
-            elseif (OptionType::Bool == $type)
-                $val = $val == 1 || $val = '1' || $val == 'true' || $val == true;
+					elseif (OptionType::Bool == $type)
+							$val = $val == 1 || $val = '1' || $val == 'true' || $val == true;
 
-            elseif (OptionType::Json == $type)
-                $val = unserialize( $val );
+					elseif (OptionType::Json == $type)
+							$val = unserialize( $val );
 
-            //  Lo Insertamos en la configuración
-            $config[ $name ] = [
-                'id' => $id,
-                'value' => $val,
-                'type' => $type,
-                'restricted' => $restricted
-            ];
-        }
+					//  Lo Insertamos en la configuración
+					$config[ $name ] = [
+							'id' => $id,
+							'value' => $val,
+							'type' => $type,
+							'restricted' => $restricted
+					];
+			}
 
-        //  Cargamos la configuración solicitada o la del usuario actual, si es que no tiene permisos
-        $options = service_db_select(
-            'SELECT * FROM inside_options_user WHERE uid = :uid', [
-                'uid' => (USER_LEVEL >= UserType::Admin && CanDo('users') && $UserId > 0)
-                    ? $UserId
-                    : $info_user['id']
-            ]
-        );
+			//	Si viene -1 devolvemos la configuración global
+			if($UserId == -1)
+				return $config;
 
-        //  Volvemos a recorrer el array pero esta vez filtrando solo los !restricted
-        for ($i = 0; $i < count($options); $i++) {
+			//  Cargamos la configuración solicitada o la del usuario actual, si es que no tiene permisos
+			$options = service_db_select(
+					'SELECT * FROM inside_options_user WHERE uid = :uid', [
+							'uid' => (USER_LEVEL >= UserType::Admin && CanDo('users') && $UserId > 0)
+									? $UserId
+									: $info_user['id']
+					]
+			);
 
-            $name = $options[$i]['name'];
-            $conf = $config[ $name ];
+			//  Volvemos a recorrer el array pero esta vez filtrando solo los !restricted
+			for ($i = 0; $i < count($options); $i++) {
 
-            //  Checamos si la config general no es restringida
-            if( !$conf['restricted'] ) { 
+					$name = $options[$i]['name'];
+					$conf = $config[ $name ];
 
-                $val = $options[$i]['value'];
+					//  Checamos si la config general no es restringida
+					if( !$conf['restricted'] ) { 
 
-                if (OptionType::Number == $conf['type'])
-                    $val = $val * 1;
+							$val = $options[$i]['value'];
 
-                elseif (OptionType::Bool == $conf['type'])
-                    $val = $val == 1 || $val = '1' || $val == 'true' || $val == true;
+							if (OptionType::Number == $conf['type'])
+									$val = $val * 1;
 
-                elseif (OptionType::Json == $conf['type'])
-                    $val = unserialize( $val );
+							elseif (OptionType::Bool == $conf['type'])
+									$val = $val == 1 || $val = '1' || $val == 'true' || $val == true;
 
-                $config[ $name ]['value'] = $val;
-            }
-        }
+							elseif (OptionType::Json == $conf['type'])
+									$val = unserialize( $val );
 
-        //  Devolvemos la configuración
-        return $config;
+							$config[ $name ]['value'] = $val;
+					}
+			}
+
+			//  Devolvemos la configuración
+			return $config;
 
     }
     // Carga la configuración principal
