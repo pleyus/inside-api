@@ -1,4 +1,5 @@
 <?php
+//	PRONTO DEJARÁ DE SER UTILIZABLE ESTE MAKE
 	
 	//	Terminamos para que no se abra sin login...
 	if ( !defined('MAKE') ) die();
