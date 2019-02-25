@@ -365,6 +365,7 @@
 				firstname, 
 				lastname, 
 				email,
+				username,
 
 				CONCAT(firstname, ' ', lastname) link_title,
 				email link_subtitle,
@@ -375,6 +376,7 @@
 				[id => $U['uid']]
 			);
 			$U['platform'] = empty( $U['platform'] ) ? null : $U['platform'][0];
+			$U['username'] = $U['platform'] !== null ? $U['platform']['username'] : ''; // el username en root
 		/***************************************************
 		*	Sacamos la Información de sus programas de radio
 		****************************************************/
