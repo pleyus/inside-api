@@ -7,8 +7,13 @@
 		RadioMessages => [],
 		Messages => [],
 		Birthdays => [],
-		Feedbacks => []
+		Feedbacks => [],
+		LoggedIn => $USER->id > 0
 	];
+
+	//	LoggedIn
+	if(!$counter[LoggedIn])
+		service_end( Status::Success, $counter );
 
 	//	Applicants
 		if( CanDo('applicants') )
@@ -96,7 +101,6 @@
 			$counter[ Birthdays ] = service_db_select($q);
 			//$counter[ DEBUG ] = service_db_error()[2];
 		# endif;
-
 	
 	service_end( Status::Success, $counter );
 

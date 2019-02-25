@@ -171,7 +171,7 @@
 
 	function decode_file($data, $types = [ 'jpg', 'jpeg', 'gif', 'png' ] )
 	{
-		if (preg_match('/^data:image\/(\w+);base64,/', $data, $type)) 
+		if (preg_match('/^data:image\/(\w+);base64,/', $data, $types)) 
 		{
 			$data = substr($data, strpos($data, ',') + 1);
 			$data = str_replace(' ', '+', $data);
@@ -221,6 +221,8 @@
 	function GetUserInfo($id = 0)
 	{
 		global $OUTPUT, $USER;
+
+		if( $USER->id < 1 ) return [];
 
 		/***************************************************
 		*	Información base de usuario
@@ -432,11 +434,12 @@
 		}catch(Exception $x){}
 	}
 
-	function CanDo( $module ){
+	function CanDo( $module ) {
 		global $info_user;
 
-		//	Mientras no se actualiza el modulo
-		//return true;
+		//	Solo pueden hacer cambios quienes esten loggeados
+		if( $info_user['id'] < 1)
+			return false;
 
 		$q = "SELECT * FROM info_user_capabilities WHERE uid = :id LIMIT 1";
 		$p = [ id => $info_user[ id ]];
