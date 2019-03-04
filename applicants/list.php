@@ -16,9 +16,10 @@
 	$filter_type = service_get_param('filter_type', Param::Post);
 
 	$period = service_match_param('period', 0);
+	$admin = service_match_param('admin', 0);
 
 	# Orders
-		$ORDERS = [ 'u.at', 'u.firstname', 'u.lastname', 'n.at', 'n.note' ];
+		$ORDERS = [ 'u.at', 'u.firstname', 'u.lastname', 'n.at', 'n.note', 'ua.firstname' ];
 		$order = service_match_param('order'); // Asc Desc
 		$order_by = service_match_param('order_by'); // Column
 
@@ -40,6 +41,7 @@
 				a.campaign,
 				a.id id, 
 				a.uid,
+				a.aid,
 				a.excluded,
 
 				n.note,
@@ -57,8 +59,7 @@
 				u.status,
 				u.type,
 
-				'' as new_note,
-				'0' as note_saved
+				NULL as assigned
 			FROM 
 				$tab_applicants a
 				LEFT JOIN 
@@ -73,9 +74,11 @@
 						LEFT JOIN $tab_notes x ON x.at = n.the_last
 				) n ON n.aid = a.id
 				LEFT JOIN $tab_users u ON u.id = a.uid
+				LEFT JOIN $tab_users ua ON ua.id = a.aid
 				LEFT JOIN $tab_categories c ON c.id = u.cid
 			WHERE 1 ".
 				($period > 0 ? ' AND YEAR( FROM_UNIXTIME(u.at) ) = :period ' : '').
+				($admin > 0 ? ' AND a.aid = :admin ' : ($admin == -1 ? ' AND a.aid IS NULL ' : '')).
 
 				(!empty($search) 
 					? " AND CONCAT_WS(' ', u.firstname, u.lastname, u.personal_phone, u.tutor_phone, n.note, c.name, u.idnumber, u.firstname, u.lastname, u.personal_phone, u.tutor_phone, n.note, c.name, u.idnumber) LIKE :search "
@@ -101,6 +104,9 @@
 
 		if($period > 0)
 			$params['period'] = $period;
+		
+		if($admin > 0)
+			$params['admin'] = $admin;
 
 		if( !empty($search) )
 			$params['search'] = '%' . $search . '%';
