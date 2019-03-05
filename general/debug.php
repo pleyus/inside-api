@@ -11,4 +11,6 @@
 		//	Solo los admins...
 
 
+		service_end(Status::Success, $_FILES);
 	}
+	service_end(Status::Error, $CFG->session_file_save_path);

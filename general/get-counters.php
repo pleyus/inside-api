@@ -8,6 +8,7 @@
 		Messages => [],
 		Birthdays => [],
 		Feedbacks => [],
+		ApplicantsTracking => [],
 		LoggedIn => $USER->id > 0
 	];
 
@@ -25,6 +26,33 @@
 			WHERE n.id IS NULL AND u.status = 4";
 
 			$counter[ Applicants ] = count( service_db_select($q) );
+
+			//	Obtiene los aspirantes que llevan seguimiento actualmente
+			$tai = service_match_param('tai');
+
+			//	Borramos los trackings antiguos
+			$q = "DELETE FROM inside_applicants_tracking WHERE at < (" . time() . " - 30)";
+			service_db_insert($q);
+
+			//	Borramos los del usuario
+			$q = "DELETE FROM inside_applicants_tracking WHERE uid = :uid";
+			$p = [ 'uid' => $info_user['id'] ];
+			service_db_insert($q, $p);
+
+
+			if($tai > 0) {
+				
+				//	Si se esta haciendo tracking...
+				$q = "INSERT INTO inside_applicants_tracking (aid, uid, at) VALUES (:aid, :uid, " . time() . ");";
+				$p['aid'] = $tai;
+
+				service_db_insert($q, $p);
+			}
+
+			//	Devolvemos los trackings actuales
+			$q = "SELECT * FROM inside_applicants_tracking";
+			$counter[ ApplicantsTracking ] = service_db_select($q);
+			
 		}
 
 	//	Feedbacks
