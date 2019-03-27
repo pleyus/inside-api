@@ -9,7 +9,11 @@
 		Birthdays => [],
 		Feedbacks => [],
 		ApplicantsTracking => [],
-		LoggedIn => $USER->id > 0
+		LoggedIn => $USER->id > 0,
+		Polls => [],
+		Config => [
+			'enable_polls' => true
+		]
 	];
 
 	//	LoggedIn
