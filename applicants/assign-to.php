@@ -3,8 +3,8 @@
 	//	Terminamos para que no se abra sin login...
 	if ( !defined('MAKE') ) die();
 
-	$aid = service_match_param('aid');
-	$uid = service_match_param('uid');
+	$aid = service_match_param('aid'); $aid = $aid > 0 ? $aid : 0;
+	$uid = service_match_param('uid'); $uid = $uid > 0 ? $uid : null;
 
 	$report = service_match_param('only-report');
 	$clear = service_match_param('clear');
@@ -28,26 +28,13 @@
 			}
 		}
 		else {
-			$q = "SELECT id FROM info_user WHERE id = :uid";
-			$p = ['uid' => $uid];
-			$r = service_db_select($q, $p);
-
-			if (!empty($r)) {
-
-				$q = "SELECT id FROM inside_applicants WHERE id = :aid";
-				$p = ['aid' => $aid];
-				$r = service_db_select($q, $p);
-
-				if (!empty($r)) {
-					$q = "UPDATE inside_applicants SET aid = :uid WHERE id = :aid";
-					$p = ['uid' => $uid, 'aid' => $aid];
-					if (service_db_insert($q, $p)) {
-						service_end(Status::Success, 'Se ha asignado correctamente');
-					}
-				}
-
+			$q = "UPDATE inside_applicants SET aid = :uid WHERE id = :aid";
+			$p = ['uid' => $uid, 'aid' => $aid];
+			if (service_db_insert($q, $p)) {
+				service_end(Status::Success, 'Se ha asignado correctamente');
 			}
-			service_end(Status::Error, 'No se pudo asignar el administrador al aspirante');
+
+			service_end(Status::Error, 'No se pudo asignar el usuario al aspirante');
 		}
 	}
 	else{
