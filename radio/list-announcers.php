@@ -19,7 +19,7 @@
 	$tab_user = "info_user";
 	$tab_course = "info_categories";
 	$tab_announcers = "radio_announcers";
-	$tab_pics = "info_user_pictures";
+	$tab_pics = "inside_files";
 
 	if(USER_LEVEL == UserType::Admin && CanDo('radio'))
 	{
@@ -32,17 +32,17 @@
 			IF(c.name IS NULL, '', c.name) course,
 			u.level,
 			h.status,
-			p.filename,
+			f.url,
 			u.id AS uid,
 
 			h.alias link_title,
 			CONCAT_WS(' ', u.firstname, u.lastname, c.name, h.alias) link_subtitle,
 			IF(c.name IS NULL, IF(u.type = 4,'Administrador', IF(u.type = 3, 'Docente', '(Desconocido)')) , c.name) link_body,
-			p.filename link_imgurl
+			f.url link_imgurl
 		FROM 
 			$tab_announcers h
 			LEFT JOIN $tab_user u ON u.id = h.uid
-			LEFT JOIN $tab_pics p ON p.id = u.pid
+			LEFT JOIN $tab_pics f ON f.id = u.fid
 			LEFT JOIN $tab_course c ON c.id = u.cid
 		WHERE 1 ".
 			(!empty($s) ? ' AND CONCAT_WS(" ", h.alias, u.firstname, u.lastname, c.name ) LIKE :s ' : '').

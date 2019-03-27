@@ -25,11 +25,11 @@
 			IF(c.param1 = 's', 'true', 'false') s,
 			u.level,
 			u.idnumber,
-			p.filename
+			f.url
 		FROM
 			info_user u
 			LEFT JOIN info_categories c ON c.id = u.cid
-			LEFT JOIN info_user_pictures p ON p.id = u.pid
+			LEFT JOIN inside_files f ON f.id = u.fid
 		WHERE
 			u.id IN $ids
 		LIMIT 9999";

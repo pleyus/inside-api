@@ -10,13 +10,13 @@
 			u.id,
 			u.firstname,
 			u.lastname,
-			u.pid,
-			p.filename,
+			u.fid,
+			f.url,
 			u.status,
 			c.applicants as capable
 		FROM 
 			info_user u
-			LEFT JOIN info_user_pictures p ON p.id = u.pid
+			LEFT JOIN inside_files f ON f.id = u.fid
 			LEFT JOIN info_user_capabilities c ON c.uid = u.id
 		WHERE
 			u.type = 4";

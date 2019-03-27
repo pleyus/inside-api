@@ -68,8 +68,8 @@ function get_pays()
 	
 	//	Asignar datos al array de retorno
 	$P['user'] = $U[0];
-	$PIC = service_db_select("SELECT * FROM info_user_pictures WHERE uid = :uid", [uid => $P['user'][id]]);
-	$P['user']['picture'] = empty($PIC[0]) ? [] : $PIC[0];
+	$PIC = service_db_select("SELECT * FROM inside_files WHERE id = :fid", ['fid' => $P['user']['fid']]);
+	$P['user']['picture'] = empty($PIC) ? [] : $PIC[0];
 	
 	$COURSE = service_db_select("SELECT * FROM info_categories WHERE id = :id", ['id' => $P['user']['cid']]);
 	$P['user']['course'] = !empty($COURSE) ? $COURSE[0] : [];

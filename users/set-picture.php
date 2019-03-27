@@ -4,7 +4,7 @@
 	if ( !defined('MAKE') ) die();
 
 	//	Tablas utilizadas
-	$tab_pictures = "info_user_pictures";
+	$tab_pictures = "inside_files";
 	$tab_user = "info_user";
 
 	//	Id de la foto
@@ -17,8 +17,8 @@
 	{
 		if($action == 'set')
 		{
-			//	Query para la tabla usuarios, asignando el id de la imagen a pid, donde el id de usuario sea uid
-			$query = "UPDATE $tab_user SET pid = :id WHERE id = :uid;";
+			//	Query para la tabla usuarios, asignando el id de la imagen a fid, donde el id de usuario sea uid
+			$query = "UPDATE $tab_user SET fid = :id WHERE id = :uid;";
 			$params = ['id' => $id, 'uid' => $uid];
 			
 			if(service_db_insert($query, $params))
@@ -53,14 +53,14 @@
 					$pics = !empty($pics) ? $pics[0]['id'] : 0;
 
 					//	Sacamos el id de la info del usuario
-					$user_pic = service_db_select("SELECT pid FROM $tab_user WHERE id = :uid", ['uid' => $uid]);
+					$user_pic = service_db_select("SELECT fid FROM $tab_user WHERE id = :uid", ['uid' => $uid]);
 					//	Sacamos solo el id de la imagen actual del usuario
-					$user_pic = !empty($user_pic) ? $user_pic['pid'] : 0;
+					$user_pic = !empty($user_pic) ? $user_pic['fid'] : 0;
 
 					//	En caso de que el id de la imagen sea el mismo $id que borramos
 					if($user_pic == $id)
-						//	Le ponemos la mas reciente o directamente 0 al pid anterior
-						service_db_insert("UPDATE $tab_user SET pid = :pid WHERE id = :uid", ['pid' => $pics, 'uid' => $uid]);
+						//	Le ponemos la mas reciente o directamente 0 al fid anterior
+						service_db_insert("UPDATE $tab_user SET fid = :fid WHERE id = :uid", ['fid' => $pics, 'uid' => $uid]);
 					
 					service_end(Status::Success, "Se ha eliminado la imagen correctamente");
 				}

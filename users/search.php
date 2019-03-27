@@ -6,7 +6,7 @@
 	//	Tablas a utilizar
 	$Tusers = "info_user";
 	$Tcourse = "info_categories";
-	$Tupics = "info_user_pictures";
+	$Tupics = "inside_files";
 
 	$s = service_match_param('s');
 	$s = str_replace(' ', '%', $s);
@@ -24,12 +24,12 @@
 			CONCAT_WS(' ', u.firstname, u.lastname) link_title,
 			IF(c.name IS NULL, IF(u.type = 4,'Administrador', IF(u.type = 3, 'Docente', '(Desconocido)')) , c.name) link_subtitle,
 			'' link_body,
-			p.filename link_imgurl
+			f.url link_imgurl
 
 
 		FROM 
 			info_user u
-			LEFT JOIN info_user_pictures p ON p.id = u.pid
+			LEFT JOIN inside_files f ON f.id = u.fid
 			LEFT JOIN info_categories c ON c.id = u.cid
 			
 		WHERE
@@ -60,18 +60,18 @@
 				u.firstname, 
 				u.lastname,
 				u.status,
-				p.filename,
+				f.url,
 				c.name course,
 				u.level,
 				
 				u.firstname link_title,
 				u.lastname link_subtitle,
 				IF(c.name IS NULL, IF(u.type = 4,'Administrador', IF(u.type = 3, 'Docente', '(Desconocido)')) , c.name) link_body,
-				p.filename link_imgurl
+				f.url link_imgurl
 				
 			FROM
 				$Tusers u
-				LEFT JOIN $Tupics p ON p.uid = u.id
+				LEFT JOIN $Tupics f ON f.uid = u.id
 				LEFT JOIN $Tcourse c ON c.id = u.cid
 			WHERE
 				CONCAT_WS(' ', u.firstname, u.lastname, u.idnumber, u.email) like :s

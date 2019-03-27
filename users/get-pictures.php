@@ -5,7 +5,7 @@
 
 	$id = service_match_param('id');
 	
-	$tab_pictures = "info_user_pictures";
+	$tab_pictures = "inside_files";
 
 	if( $USER->id < 2 ) // Si es que esta loggeado
 		service_end(Status::Warning, 'Modulo protegido');

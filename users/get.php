@@ -9,7 +9,7 @@
 	$T_guide = "radio_guide";
 	$T_announcers = "radio_announcers";
 	$T_gh = "radio_guide_announcers";
-	$T_pictures = "info_user_pictures";
+	$T_pictures = "inside_files";
 	$T_categories = "info_categories";
 	$T_institutions = 'info_institutions';
 

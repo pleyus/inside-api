@@ -249,6 +249,7 @@
 			$id = $id > 0 ? $id : $U[ id ];
 			
 			$USER->uid = $U['id'];
+			$U['sesskey'] = $USER->sesskey;
 
 		/***************************************************
 		*	Sacamos la información del curso en el que esta
@@ -274,10 +275,10 @@
 				"SELECT 
 					* 
 				FROM 
-					info_user_pictures
+					inside_files
 				WHERE 
 					id = :id", 
-				['id' => $U['pid'] ]
+				['id' => $U['fid'] ]
 			);
 
 			//	Si viene algun curso lo ponemos, si no vaciamos el array

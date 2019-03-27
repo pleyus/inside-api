@@ -55,9 +55,9 @@
 		}
 		
 		if($Wild[1]['!pic'] || $Wild[1]['!foto'] || $Wild[1]['!confoto'])
-			$WQuery .= " AND (u.pid IS NULL OR u.pid < 1) ";
+			$WQuery .= " AND (u.fid IS NULL OR u.fid < 1) ";
 		elseif($Wild[1]['pic'] || $Wild[1]['confoto'] || $Wild[1]['foto'])
-			$WQuery .= " AND u.pid > 0 ";
+			$WQuery .= " AND u.fid > 0 ";
 
 
 		if($Wild[1]['!activos'] || $Wild[1]['!active'] || $Wild[1]['inactive'])
@@ -104,8 +104,8 @@
 			u.lastname,
 			u.email,
 			u.birthday,
-			u.pid,
-			p.filename,
+			u.fid,
+			f.url,
 			u.type,
 			u.sex,
 			u.personal_phone,
@@ -125,7 +125,7 @@
 		FROM 
 			info_user u
 			LEFT JOIN info_categories c ON c.id = u.cid
-			LEFT JOIN info_user_pictures p ON p.id = u.pid
+			LEFT JOIN inside_files f ON f.id = u.fid
 			LEFT JOIN info_sepomex s ON s.id = u.lid
 		WHERE ";
 

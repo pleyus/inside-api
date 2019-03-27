@@ -9,7 +9,7 @@
 	//die( print_r([$GLOBALS], true));
 	
 	$tab_users = "info_user";
-	$tab_pictures = "info_user_pictures";
+	$tab_pictures = "inside_files";
 
 	//	Solo los administradores pueden subir archivos
 	if( USER_LEVEL == UserType::Admin && CanDo('user') )
@@ -53,8 +53,8 @@
 
 					$pic = !empty($pic) ? $pic[0] : ['id' => 0, 'filename' => ''];
 					
-					$query = "UPDATE $tab_users SET pid = :pid WHERE id = :uid";
-					$params = ['pid' => $pic['id'], 'uid' => $uid];
+					$query = "UPDATE $tab_users SET fid = :fid WHERE id = :uid";
+					$params = ['fid' => $pic['id'], 'uid' => $uid];
 					service_db_insert($query, $params);
 
 					service_end(Status::Success, $pic);
