@@ -100,7 +100,7 @@
 	//	Cumpleaños... 1
 		#	if( ERES_HUMANO ) 
 			$q = "SELECT
-				u.id, u.firstname, u.lastname, u.birthday, p.filename, u.status,
+				u.id, u.firstname, u.lastname, u.birthday, f.url, u.status,
 				IF(c.name IS NULL, IF(u.type = 4,'Administrativo', IF(u.type = 3, 'Docente', '(Desconocido)')) , c.name) course, 
 				u.level,
 				YEAR(CURDATE()) - YEAR( FROM_UNIXTIME( u.birthday) ) AS age,
@@ -109,7 +109,7 @@
 					IF(DAYOFYEAR(CURDATE()) > DAYOFYEAR(FROM_UNIXTIME( u.birthday )),1,0) YEAR )) at
 			FROM 
 				info_user u
-				LEFT JOIN info_user_pictures p ON p.id = u.pid
+				LEFT JOIN inside_files f ON f.id = u.fid
 				LEFT JOIN info_categories c ON c.id = u.cid
 			WHERE 
 				u.birthday != 0 AND
