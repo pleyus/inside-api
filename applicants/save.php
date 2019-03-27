@@ -218,12 +218,12 @@
 				"INSERT INTO info_user 
 				(
 					idnumber, type, firstname, lastname,
-					sex, pid, birthday, address, lid,
+					sex, birthday, address, lid,
 					email, personal_phone,
 					uid, rid, iid, cid, level, at, status
 				)VALUES(
 					'XXESP000', 2, :firstname, :lastname, 
-					:sex, 0, 0, :address, :lid,
+					:sex, 0, :address, :lid,
 					:email, :personal_phone,
 					0, :rid, :iid, :cid, 0, :at, 4
 				)";
